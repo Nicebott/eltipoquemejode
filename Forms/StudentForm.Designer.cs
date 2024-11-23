@@ -1,14 +1,11 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
-using System.Linq;
 using System;
 
 namespace GradeManagementSystem.Forms
 {
-    // Herencia: StudentForm hereda de Form (1er pilar - Herencia)
     partial class StudentForm
     {
-        // Encapsulamiento: Campos privados para los controles (2do pilar - Encapsulamiento)
         private System.ComponentModel.IContainer components = null;
         private TextBox txtStudentId;
         private TextBox txtFirstName;
@@ -21,10 +18,24 @@ namespace GradeManagementSystem.Forms
         private NumericUpDown numPractice3;
         private Button btnSave;
         private Button btnCancel;
-        private Panel headerPanel;
+        private Panel panelTop;
         private Label lblHeader;
+        private TableLayoutPanel mainLayout;
+        private GroupBox groupPersonal;
+        private GroupBox groupExams;
+        private GroupBox groupPractices;
+        private Panel panelButtons;
+        private Label lblStudentId;
+        private Label lblFirstName;
+        private Label lblLastName;
+        private Label lblFirstExam;
+        private Label lblSecondExam;
+        private Label lblFinalExam;
+        private Label lblPractice1;
+        private Label lblPractice2;
+        private Label lblPractice3;
+        private FlowLayoutPanel flowButtons;
 
-        // Polimorfismo: Sobrescribe el método Dispose de Form (3er pilar - Polimorfismo)
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -34,172 +45,242 @@ namespace GradeManagementSystem.Forms
             base.Dispose(disposing);
         }
 
-        // Método privado para inicializar los componentes del formulario
         private void InitializeComponent()
         {
-            // Inicialización del contenedor de componentes
             this.components = new System.ComponentModel.Container();
 
-            // Configuración del panel de encabezado
-            this.headerPanel = new Panel();
-            this.headerPanel.BackColor = Color.FromArgb(52, 73, 94);
-            this.headerPanel.Dock = DockStyle.Top;
-            this.headerPanel.Height = 60;
+            // Layout Principal
+            this.mainLayout = new TableLayoutPanel();
+            this.mainLayout.Dock = DockStyle.Fill;
+            this.mainLayout.RowCount = 4;
+            this.mainLayout.ColumnCount = 1;
+            this.mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 60F));
+            this.mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            this.mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            this.mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
+            this.mainLayout.Padding = new Padding(10);
 
-            // Configuración de la etiqueta del encabezado
+            // Panel Superior
+            this.panelTop = new Panel();
+            this.panelTop.Dock = DockStyle.Fill;
+            this.panelTop.BackColor = Color.FromArgb(0, 70, 140);
+            this.panelTop.Margin = new Padding(0);
+
             this.lblHeader = new Label();
-            this.lblHeader.Text = "Datos del Estudiante";
+            this.lblHeader.Text = "Registro de Estudiante";
             this.lblHeader.ForeColor = Color.White;
-            this.lblHeader.Font = new Font("Segoe UI", 16, FontStyle.Bold);
-            this.lblHeader.Location = new Point(20, 15);
-            this.lblHeader.AutoSize = true;
-            this.headerPanel.Controls.Add(this.lblHeader);
+            this.lblHeader.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            this.lblHeader.Dock = DockStyle.Fill;
+            this.lblHeader.TextAlign = ContentAlignment.MiddleCenter;
+            this.panelTop.Controls.Add(this.lblHeader);
 
-            // Abstracción: Creación de estilos reutilizables (4to pilar - Abstracción)
-            // Estilo personalizado para TextBox
-            var textBoxStyle = new Action<TextBox>((textBox) => {
-                textBox.Font = new Font("Segoe UI", 11);
-                textBox.BorderStyle = BorderStyle.FixedSingle;
-                textBox.Size = new Size(250, 30);
+            // Grupo de Datos Personales
+            this.groupPersonal = new GroupBox();
+            this.groupPersonal.Text = "Datos Personales";
+            this.groupPersonal.Dock = DockStyle.Fill;
+            this.groupPersonal.Font = new Font("Segoe UI", 9F);
+            this.groupPersonal.Padding = new Padding(10);
+            this.groupPersonal.Margin = new Padding(0, 5, 0, 5);
+
+            var personalLayout = new TableLayoutPanel();
+            personalLayout.Dock = DockStyle.Fill;
+            personalLayout.ColumnCount = 6;
+            personalLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+            personalLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
+            personalLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+            personalLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
+            personalLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+            personalLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
+
+            // Campos de Datos Personales
+            this.lblStudentId = CreateLabel("Matrícula:");
+            this.lblFirstName = CreateLabel("Nombre:");
+            this.lblLastName = CreateLabel("Apellido:");
+
+            this.txtStudentId = CreateTextBox();
+            this.txtFirstName = CreateTextBox();
+            this.txtLastName = CreateTextBox();
+
+            personalLayout.Controls.AddRange(new Control[] {
+                lblStudentId, txtStudentId,
+                lblFirstName, txtFirstName,
+                lblLastName, txtLastName
             });
+            this.groupPersonal.Controls.Add(personalLayout);
 
-            // Estilo personalizado para NumericUpDown
-            var numericStyle = new Action<NumericUpDown>((numeric) => {
-                numeric.Font = new Font("Segoe UI", 11);
-                numeric.BorderStyle = BorderStyle.FixedSingle;
-                numeric.Size = new Size(120, 30);
-                numeric.Minimum = 10;          // Valor mínimo permitido
-                numeric.Maximum = 100;         // Valor máximo permitido
-                numeric.DecimalPlaces = 2;     // Decimales permitidos
-                numeric.Value = 10;            // Valor inicial
+            // TableLayoutPanel para Exámenes y Prácticas
+            var gradesLayout = new TableLayoutPanel();
+            gradesLayout.Dock = DockStyle.Fill;
+            gradesLayout.ColumnCount = 2;
+            gradesLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            gradesLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            gradesLayout.Margin = new Padding(0);
+
+            // Grupo de Exámenes
+            this.groupExams = new GroupBox();
+            this.groupExams.Text = "Calificaciones de Exámenes";
+            this.groupExams.Dock = DockStyle.Fill;
+            this.groupExams.Font = new Font("Segoe UI", 9F);
+            this.groupExams.Padding = new Padding(10);
+            this.groupExams.Margin = new Padding(0, 0, 5, 0);
+
+            var examsLayout = new TableLayoutPanel();
+            examsLayout.Dock = DockStyle.Fill;
+            examsLayout.RowCount = 3;
+            examsLayout.ColumnCount = 2;
+            examsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
+            examsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+
+            // Campos de Exámenes
+            this.lblFirstExam = CreateLabel("Primer Parcial:");
+            this.lblSecondExam = CreateLabel("Segundo Parcial:");
+            this.lblFinalExam = CreateLabel("Examen Final:");
+
+            this.numFirstExam = CreateNumericUpDown();
+            this.numSecondExam = CreateNumericUpDown();
+            this.numFinalExam = CreateNumericUpDown();
+
+            examsLayout.Controls.AddRange(new Control[] {
+                lblFirstExam, numFirstExam,
+                lblSecondExam, numSecondExam,
+                lblFinalExam, numFinalExam
             });
+            this.groupExams.Controls.Add(examsLayout);
 
-            // Estilo personalizado para Label
-            var labelStyle = new Action<Label>((label) => {
-                label.Font = new Font("Segoe UI", 11);
-                label.ForeColor = Color.FromArgb(52, 73, 94);
-                label.AutoSize = true;
+            // Grupo de Prácticas
+            this.groupPractices = new GroupBox();
+            this.groupPractices.Text = "Calificaciones de Prácticas";
+            this.groupPractices.Dock = DockStyle.Fill;
+            this.groupPractices.Font = new Font("Segoe UI", 9F);
+            this.groupPractices.Padding = new Padding(10);
+            this.groupPractices.Margin = new Padding(5, 0, 0, 0);
+
+            var practicesLayout = new TableLayoutPanel();
+            practicesLayout.Dock = DockStyle.Fill;
+            practicesLayout.RowCount = 3;
+            practicesLayout.ColumnCount = 2;
+            practicesLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
+            practicesLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+
+            // Campos de Prácticas
+            this.lblPractice1 = CreateLabel("Práctica 1:");
+            this.lblPractice2 = CreateLabel("Práctica 2:");
+            this.lblPractice3 = CreateLabel("Práctica 3:");
+
+            this.numPractice1 = CreateNumericUpDown();
+            this.numPractice2 = CreateNumericUpDown();
+            this.numPractice3 = CreateNumericUpDown();
+
+            practicesLayout.Controls.AddRange(new Control[] {
+                lblPractice1, numPractice1,
+                lblPractice2, numPractice2,
+                lblPractice3, numPractice3
             });
+            this.groupPractices.Controls.Add(practicesLayout);
 
-            // Sección de información del estudiante
-            var lblStudentId = new Label { Text = "Matrícula:", Location = new Point(30, 80) };
-            var lblFirstName = new Label { Text = "Nombre:", Location = new Point(30, 130) };
-            var lblLastName = new Label { Text = "Apellido:", Location = new Point(30, 180) };
+            // Agregar grupos al layout de calificaciones
+            gradesLayout.Controls.Add(this.groupExams, 0, 0);
+            gradesLayout.Controls.Add(this.groupPractices, 1, 0);
 
-            this.txtStudentId = new TextBox { Location = new Point(30, 105) };
-            this.txtFirstName = new TextBox { Location = new Point(30, 155) };
-            this.txtLastName = new TextBox { Location = new Point(30, 205) };
+            // Panel de Botones
+            this.panelButtons = new Panel();
+            this.panelButtons.Dock = DockStyle.Fill;
+            this.panelButtons.BackColor = SystemColors.Control;
+            this.panelButtons.Margin = new Padding(0);
 
-            // Validación para permitir solo números en la matrícula
-            this.txtStudentId.KeyPress += new KeyPressEventHandler((sender, e) => {
-                if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-                {
-                    e.Handled = true;
-                }
-            });
+            // FlowLayoutPanel para Botones
+            this.flowButtons = new FlowLayoutPanel();
+            this.flowButtons.Dock = DockStyle.Right;
+            this.flowButtons.FlowDirection = FlowDirection.LeftToRight;
+            this.flowButtons.WrapContents = false;
+            this.flowButtons.AutoSize = true;
+            this.flowButtons.Padding = new Padding(5);
 
-            // Aplicación de estilos a las etiquetas y campos de texto
-            new[] { lblStudentId, lblFirstName, lblLastName }.ToList().ForEach(labelStyle);
-            new[] { txtStudentId, txtFirstName, txtLastName }.ToList().ForEach(textBoxStyle);
+            // Botones
+            this.btnCancel = new Button();
+            this.btnCancel.Text = "❌ Cancelar";
+            this.btnCancel.Size = new Size(120, 40);
+            this.btnCancel.FlatStyle = FlatStyle.Flat;
+            this.btnCancel.FlatAppearance.BorderColor = Color.FromArgb(232, 17, 35);
+            this.btnCancel.ForeColor = Color.FromArgb(232, 17, 35);
+            this.btnCancel.Font = new Font("Segoe UI", 9F);
+            this.btnCancel.DialogResult = DialogResult.Cancel;
+            this.btnCancel.Margin = new Padding(5);
 
-            // Sección de exámenes
-            var lblExams = new Label
-            {
-                Text = "Calificaciones de Exámenes",
-                Location = new Point(30, 255),
-                Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                ForeColor = Color.FromArgb(52, 73, 94)
-            };
-
-            var lblFirstExam = new Label { Text = "Primer Parcial:", Location = new Point(30, 290) };
-            var lblSecondExam = new Label { Text = "Segundo Parcial:", Location = new Point(30, 340) };
-            var lblFinalExam = new Label { Text = "Examen Final:", Location = new Point(30, 390) };
-
-            this.numFirstExam = new NumericUpDown { Location = new Point(160, 290) };
-            this.numSecondExam = new NumericUpDown { Location = new Point(160, 340) };
-            this.numFinalExam = new NumericUpDown { Location = new Point(160, 390) };
-
-            // Aplicación de estilos a las etiquetas y campos numéricos de exámenes
-            new[] { lblFirstExam, lblSecondExam, lblFinalExam }.ToList().ForEach(labelStyle);
-            new[] { numFirstExam, numSecondExam, numFinalExam }.ToList().ForEach(numericStyle);
-
-            // Sección de prácticas
-            var lblPractices = new Label
-            {
-                Text = "Calificaciones de Prácticas",
-                Location = new Point(330, 255),
-                Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                ForeColor = Color.FromArgb(52, 73, 94)
-            };
-
-            var lblPractice1 = new Label { Text = "Práctica 1:", Location = new Point(330, 290) };
-            var lblPractice2 = new Label { Text = "Práctica 2:", Location = new Point(330, 340) };
-            var lblPractice3 = new Label { Text = "Práctica 3:", Location = new Point(330, 390) };
-
-            this.numPractice1 = new NumericUpDown { Location = new Point(460, 290) };
-            this.numPractice2 = new NumericUpDown { Location = new Point(460, 340) };
-            this.numPractice3 = new NumericUpDown { Location = new Point(460, 390) };
-
-            // Aplicación de estilos a las etiquetas y campos numéricos de prácticas
-            new[] { lblPractice1, lblPractice2, lblPractice3 }.ToList().ForEach(labelStyle);
-            new[] { numPractice1, numPractice2, numPractice3 }.ToList().ForEach(numericStyle);
-
-            // Configuración de botones
-            this.btnSave = new Button
-            {
-                Text = "Guardar",
-                Location = new Point(330, 460),
-                Size = new Size(120, 40),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.FromArgb(46, 204, 113),
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 11),
-                Cursor = Cursors.Hand
-            };
+            this.btnSave = new Button();
+            this.btnSave.Text = "💾 Guardar";
+            this.btnSave.Size = new Size(120, 40);
+            this.btnSave.FlatStyle = FlatStyle.Flat;
+            this.btnSave.FlatAppearance.BorderColor = Color.FromArgb(0, 120, 215);
+            this.btnSave.ForeColor = Color.FromArgb(0, 120, 215);
+            this.btnSave.Font = new Font("Segoe UI", 9F);
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.btnSave.Margin = new Padding(5);
 
-            this.btnCancel = new Button
-            {
-                Text = "Cancelar",
-                Location = new Point(460, 460),
-                Size = new Size(120, 40),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.FromArgb(231, 76, 60),
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 11),
-                Cursor = Cursors.Hand,
-                DialogResult = DialogResult.Cancel
-            };
+            this.flowButtons.Controls.AddRange(new Control[] { btnCancel, btnSave });
+            this.panelButtons.Controls.Add(this.flowButtons);
 
-            // Configuración del formulario
-            this.ClientSize = new Size(620, 530);
-            this.Controls.AddRange(new Control[] {
-                headerPanel,
-                lblStudentId, lblFirstName, lblLastName,
-                txtStudentId, txtFirstName, txtLastName,
-                lblExams, lblFirstExam, lblSecondExam, lblFinalExam,
-                numFirstExam, numSecondExam, numFinalExam,
-                lblPractices, lblPractice1, lblPractice2, lblPractice3,
-                numPractice1, numPractice2, numPractice3,
-                btnSave, btnCancel
-            });
+            // Agregar controles al layout principal
+            this.mainLayout.Controls.Add(this.panelTop, 0, 0);
+            this.mainLayout.Controls.Add(this.groupPersonal, 0, 1);
+            this.mainLayout.Controls.Add(gradesLayout, 0, 2);
+            this.mainLayout.Controls.Add(this.panelButtons, 0, 3);
 
-            // Propiedades del formulario
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            // Form
+            this.ClientSize = new Size(800, 600);
+            this.Controls.Add(this.mainLayout);
+            this.MinimumSize = new Size(800, 600);
+            this.FormBorderStyle = FormBorderStyle.Sizable;
+            this.MaximizeBox = true;
+            this.MinimizeBox = true;
             this.StartPosition = FormStartPosition.CenterParent;
             this.Text = "Gestión de Estudiante";
-            this.BackColor = Color.White;
             this.AcceptButton = btnSave;
             this.CancelButton = btnCancel;
 
-            // Inicialización de controles numéricos
-            var numericControls = new[] { numFirstExam, numSecondExam, numFinalExam, numPractice1, numPractice2, numPractice3 };
-            foreach (var control in numericControls)
+            // Manejar el evento Resize del formulario
+            this.Resize += new System.EventHandler(this.StudentForm_Resize);
+        }
+
+        private Label CreateLabel(string text)
+        {
+            return new Label
             {
-                ((System.ComponentModel.ISupportInitialize)(control)).EndInit();
-            }
+                Text = text,
+                AutoSize = true,
+                Font = new Font("Segoe UI", 9F),
+                Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                TextAlign = ContentAlignment.MiddleLeft
+            };
+        }
+
+        private TextBox CreateTextBox()
+        {
+            return new TextBox
+            {
+                Dock = DockStyle.Fill,
+                Font = new Font("Segoe UI", 9F),
+                Margin = new Padding(0, 3, 10, 3)
+            };
+        }
+
+        private NumericUpDown CreateNumericUpDown()
+        {
+            return new NumericUpDown
+            {
+                Dock = DockStyle.Fill,
+                Font = new Font("Segoe UI", 9F),
+                Minimum = 0,
+                Maximum = 100,
+                DecimalPlaces = 2,
+                Margin = new Padding(0, 3, 10, 3)
+            };
+        }
+
+        private void StudentForm_Resize(object sender, EventArgs e)
+        {
+            // Ajustar el espacio entre los botones según el tamaño de la ventana
+            flowButtons.Padding = new Padding(Math.Max(5, (panelButtons.Width - 260) / 2), 5, 5, 5);
         }
     }
 }

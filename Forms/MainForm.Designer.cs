@@ -1,7 +1,8 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
+using System;
 
-namespace GradeManagementSystem.Forms 
+namespace GradeManagementSystem.Forms
 {
     partial class MainForm
     {
@@ -12,6 +13,11 @@ namespace GradeManagementSystem.Forms
         private Button btnDelete;
         private Button btnDetails;
         private Label lblTitle;
+        private Panel panelTop;
+        private Panel panelButtons;
+        private GroupBox groupMain;
+        private TableLayoutPanel mainLayout;
+        private FlowLayoutPanel flowButtons;
 
         protected override void Dispose(bool disposing)
         {
@@ -25,105 +31,156 @@ namespace GradeManagementSystem.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.dgvStudents = new System.Windows.Forms.DataGridView();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.btnEdit = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnDetails = new System.Windows.Forms.Button();
-            this.lblTitle = new System.Windows.Forms.Label();
 
-            // lblTitle
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.Location = new System.Drawing.Point(12, 9);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(300, 30);
-            this.lblTitle.Text = "Sistema de Calificaciones - INF-5120";
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(51, 51, 51);
+            // Layout Principal
+            this.mainLayout = new TableLayoutPanel();
+            this.mainLayout.Dock = DockStyle.Fill;
+            this.mainLayout.RowCount = 3;
+            this.mainLayout.ColumnCount = 1;
+            this.mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 60F));
+            this.mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            this.mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
+            this.mainLayout.Padding = new Padding(10);
 
+            // Panel Superior
+            this.panelTop = new Panel();
+            this.panelTop.Dock = DockStyle.Fill;
+            this.panelTop.BackColor = Color.FromArgb(0, 70, 140);
+            this.panelTop.Margin = new Padding(0);
 
-            // dgvStudents
-            this.dgvStudents.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvStudents.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvStudents.BackgroundColor = System.Drawing.Color.White;
-            this.dgvStudents.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.dgvStudents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvStudents.Location = new System.Drawing.Point(12, 50);
-            this.dgvStudents.Name = "dgvStudents";
-            this.dgvStudents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvStudents.Size = new System.Drawing.Size(760, 350);
-            this.dgvStudents.TabIndex = 0;
+            // Título
+            this.lblTitle = new Label();
+            this.lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            this.lblTitle.Text = "Sistema de Gestión Académica";
+            this.lblTitle.AutoSize = false;
+            this.lblTitle.TextAlign = ContentAlignment.MiddleCenter;
+            this.lblTitle.Dock = DockStyle.Fill;
+            this.lblTitle.ForeColor = Color.White;
+            this.panelTop.Controls.Add(this.lblTitle);
 
-            // btnAdd
-            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAdd.Location = new System.Drawing.Point(12, 415);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(120, 35);
-            this.btnAdd.TabIndex = 1;
-            this.btnAdd.Text = "Agregar Estudiante";
-            this.btnAdd.BackColor = System.Drawing.Color.FromArgb(40, 167, 69);
-            this.btnAdd.ForeColor = System.Drawing.Color.White;
-            this.btnAdd.FlatStyle = FlatStyle.Flat;
-            this.btnAdd.FlatAppearance.BorderSize = 0;
+            // Grupo Principal
+            this.groupMain = new GroupBox();
+            this.groupMain.Text = "Listado de Estudiantes";
+            this.groupMain.Dock = DockStyle.Fill;
+            this.groupMain.Font = new Font("Segoe UI", 9F);
+            this.groupMain.Padding = new Padding(10);
+            this.groupMain.Margin = new Padding(0, 5, 0, 5);
+
+            // DataGridView
+            this.dgvStudents = new DataGridView();
+            this.dgvStudents.Dock = DockStyle.Fill;
+            this.dgvStudents.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvStudents.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            this.dgvStudents.AllowUserToAddRows = false;
+            this.dgvStudents.AllowUserToDeleteRows = false;
+            this.dgvStudents.ReadOnly = true;
+            this.dgvStudents.MultiSelect = false;
+            this.dgvStudents.BackgroundColor = SystemColors.Window;
+            this.dgvStudents.BorderStyle = BorderStyle.None;
+            this.dgvStudents.RowHeadersVisible = false;
+            this.dgvStudents.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgvStudents.EnableHeadersVisualStyles = false;
+            this.dgvStudents.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(245, 245, 245);
+            this.dgvStudents.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(0, 70, 140);
+            this.dgvStudents.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 9F);
+            this.dgvStudents.ColumnHeadersHeight = 35;
+            this.dgvStudents.RowTemplate.Height = 30;
+            this.dgvStudents.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250);
+            this.groupMain.Controls.Add(this.dgvStudents);
+
+            // Panel de Botones
+            this.panelButtons = new Panel();
+            this.panelButtons.Dock = DockStyle.Fill;
+            this.panelButtons.BackColor = SystemColors.Control;
+            this.panelButtons.Margin = new Padding(0);
+
+            // FlowLayoutPanel para Botones
+            this.flowButtons = new FlowLayoutPanel();
+            this.flowButtons.Dock = DockStyle.Fill;
+            this.flowButtons.FlowDirection = FlowDirection.LeftToRight;
+            this.flowButtons.WrapContents = false;
+            this.flowButtons.AutoScroll = true;
+            this.flowButtons.Padding = new Padding(5);
+
+            // Botones
+            this.btnAdd = CreateButton("Agregar Estudiante", "➕", Color.FromArgb(0, 120, 215));
+            this.btnEdit = CreateButton("Editar", "✏️", Color.FromArgb(0, 153, 188));
+            this.btnDelete = CreateButton("Eliminar", "❌", Color.FromArgb(232, 17, 35));
+            this.btnDetails = CreateButton("Ver Detalles", "📋", Color.FromArgb(0, 99, 177));
+
+            // Eventos de botones
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-
-            // btnEdit
-            this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnEdit.Location = new System.Drawing.Point(138, 415);
-            this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(120, 35);
-            this.btnEdit.TabIndex = 2;
-            this.btnEdit.Text = "Editar";
-            this.btnEdit.BackColor = System.Drawing.Color.FromArgb(0, 123, 255);
-            this.btnEdit.ForeColor = System.Drawing.Color.White;
-            this.btnEdit.FlatStyle = FlatStyle.Flat;
-            this.btnEdit.FlatAppearance.BorderSize = 0;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
-
-            // btnDelete
-            this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDelete.Location = new System.Drawing.Point(264, 415);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(120, 35);
-            this.btnDelete.TabIndex = 3;
-            this.btnDelete.Text = "Eliminar";
-            this.btnDelete.BackColor = System.Drawing.Color.FromArgb(220, 53, 69);
-            this.btnDelete.ForeColor = System.Drawing.Color.White;
-            this.btnDelete.FlatStyle = FlatStyle.Flat;
-            this.btnDelete.FlatAppearance.BorderSize = 0;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-
-            // btnDetails
-            this.btnDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDetails.Location = new System.Drawing.Point(652, 415);
-            this.btnDetails.Name = "btnDetails";
-            this.btnDetails.Size = new System.Drawing.Size(120, 35);
-            this.btnDetails.TabIndex = 4;
-            this.btnDetails.Text = "Ver Detalles";
-            this.btnDetails.BackColor = System.Drawing.Color.FromArgb(108, 117, 125);
-            this.btnDetails.ForeColor = System.Drawing.Color.White;
-            this.btnDetails.FlatStyle = FlatStyle.Flat;
-            this.btnDetails.FlatAppearance.BorderSize = 0;
             this.btnDetails.Click += new System.EventHandler(this.btnDetails_Click);
+
+            // Agregar botones al FlowLayoutPanel
+            this.flowButtons.Controls.AddRange(new Control[] { btnAdd, btnEdit, btnDelete, btnDetails });
+            this.panelButtons.Controls.Add(this.flowButtons);
+
+            // Agregar controles al layout principal
+            this.mainLayout.Controls.Add(this.panelTop, 0, 0);
+            this.mainLayout.Controls.Add(this.groupMain, 0, 1);
+            this.mainLayout.Controls.Add(this.panelButtons, 0, 2);
 
             // MainForm
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(784, 461);
-            this.Controls.Add(this.lblTitle);
-            this.Controls.Add(this.dgvStudents);
-            this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.btnEdit);
-            this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.btnDetails);
-            this.MinimumSize = new System.Drawing.Size(800, 500);
-            this.Name = "MainForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Sistema de Calificaciones";
+            this.AutoScaleMode = AutoScaleMode.Font;
+            this.ClientSize = new Size(900, 600);
+            this.MinimumSize = new Size(800, 500);
+            this.Controls.Add(this.mainLayout);
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Text = "Sistema de Gestión Académica";
             ((System.ComponentModel.ISupportInitialize)(this.dgvStudents)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+
+            // Manejar el evento Resize del formulario
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
+        }
+
+        private Button CreateButton(string text, string icon, Color color)
+        {
+            var btn = new Button();
+            btn.Text = $"{icon} {text}";
+            btn.Size = new Size(140, 40);
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderColor = color;
+            btn.ForeColor = color;
+            btn.Font = new Font("Segoe UI", 9F);
+            btn.Margin = new Padding(5);
+            btn.Cursor = Cursors.Hand;
+            btn.UseVisualStyleBackColor = true;
+            btn.AutoSize = true;
+            btn.MinimumSize = new Size(140, 40);
+            btn.MaximumSize = new Size(200, 40);
+            btn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            btn.MouseEnter += (s, e) => {
+                btn.BackColor = color;
+                btn.ForeColor = Color.White;
+            };
+
+            btn.MouseLeave += (s, e) => {
+                btn.BackColor = SystemColors.Control;
+                btn.ForeColor = color;
+            };
+
+            return btn;
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            // Ajustar el ancho de los botones según el tamaño de la ventana
+            int availableWidth = flowButtons.ClientSize.Width - flowButtons.Padding.Horizontal;
+            int buttonCount = flowButtons.Controls.Count;
+            int buttonWidth = Math.Max(140, (availableWidth - (buttonCount * flowButtons.Padding.Horizontal)) / buttonCount);
+
+            foreach (Control control in flowButtons.Controls)
+            {
+                if (control is Button button)
+                {
+                    button.Width = Math.Min(200, buttonWidth);
+                }
+            }
         }
     }
 }
